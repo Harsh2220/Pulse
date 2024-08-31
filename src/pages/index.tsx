@@ -1,118 +1,105 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
+import TokenCard from "@/components/cards/TokenCard";
+import useSearchStore from "@/store/search";
+import { Token } from "@/types/token";
+import { motion } from "framer-motion";
+import { useState } from "react";
 
-const inter = Inter({ subsets: ["latin"] });
-
+const mockData: Token[] = [
+  {
+    name: "Bitcoin",
+    symbol: "BTC",
+    price: 30000,
+    change: 5.2,
+    volume: 28000000000,
+    marketCap: 580000000000,
+    image: "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
+    favorite: false,
+  },
+  {
+    name: "Ethereum",
+    symbol: "ETH",
+    price: 2000,
+    change: -2.1,
+    volume: 15000000000,
+    marketCap: 240000000000,
+    image: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+    favorite: false,
+  },
+  {
+    name: "Dogecoin",
+    symbol: "DOGE",
+    price: 0.08,
+    change: 10.5,
+    volume: 1200000000,
+    marketCap: 10000000000,
+    image: "https://cryptologos.cc/logos/dogecoin-doge-logo.png",
+    favorite: false,
+  },
+  {
+    name: "Ripple",
+    symbol: "XRP",
+    price: 0.5,
+    change: -1.8,
+    volume: 2000000000,
+    marketCap: 25000000000,
+    image: "https://cryptologos.cc/logos/xrp-xrp-logo.png",
+    favorite: false,
+  },
+  {
+    name: "Cardano",
+    symbol: "ADA",
+    price: 0.3,
+    change: 3.7,
+    volume: 800000000,
+    marketCap: 10000000000,
+    image: "https://cryptologos.cc/logos/cardano-ada-logo.png",
+    favorite: false,
+  },
+  {
+    name: "Polkadot",
+    symbol: "DOT",
+    price: 5,
+    change: -0.9,
+    volume: 500000000,
+    marketCap: 6000000000,
+    image: "https://cryptologos.cc/logos/polkadot-new-dot-logo.png",
+    favorite: false,
+  },
+];
 export default function Home() {
+  const { searchText } = useSearchStore();
+  const [cryptoList, setCryptoList] = useState<Token[]>(mockData);
+
+  const toggleFavorite = (symbol: string) => {
+    setCryptoList((prevList) =>
+      prevList.map((crypto) =>
+        crypto.symbol === symbol
+          ? { ...crypto, favorite: !crypto.favorite }
+          : crypto
+      )
+    );
+  };
+
+  const filteredList = cryptoList.filter(
+    (crypto) =>
+      crypto.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      crypto.symbol.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className="min-h-screen flex flex-col transition-colors duration-300 ease-in-out">
+      <main className="flex-grow container mx-auto p-4">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, staggerChildren: 0.1 }}
         >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+          {filteredList.map((crypto) => (
+            <TokenCard crypto={crypto} toggleFavorite={toggleFavorite} />
+          ))}
+        </motion.div>
+      </main>
+    </div>
   );
 }
