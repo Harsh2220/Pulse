@@ -95,8 +95,12 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, staggerChildren: 0.1 }}
         >
-          {filteredList.map((crypto) => (
-            <TokenCard crypto={crypto} toggleFavorite={toggleFavorite} />
+          {filteredList.map((crypto, index) => (
+            <TokenCard
+              key={index}
+              crypto={crypto}
+              toggleFavorite={toggleFavorite}
+            />
           ))}
         </motion.div>
       </main>

@@ -132,8 +132,12 @@ export default function Component() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, staggerChildren: 0.1 }}
       >
-        {user.tokens.map((token) => (
-          <TokenCard crypto={token} toggleFavorite={toggleFavorite} />
+        {user.tokens.map((token, index) => (
+          <TokenCard
+            key={index}
+            crypto={token}
+            toggleFavorite={toggleFavorite}
+          />
         ))}
       </motion.div>
     </div>
