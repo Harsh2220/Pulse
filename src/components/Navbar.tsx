@@ -7,10 +7,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import useSearchStore from "@/store/search";
-import { MoonIcon, SearchIcon, SunIcon, UserIcon } from "lucide-react";
+import {
+  Coins,
+  LogInIcon,
+  LogOutIcon,
+  MoonIcon,
+  SearchIcon,
+  SunIcon,
+  UserIcon,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Navbar() {
@@ -18,6 +26,7 @@ export default function Navbar() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
@@ -41,17 +50,19 @@ export default function Navbar() {
               <span className="sr-only">CryptoPump</span>
             </Link>
           </div>
-          <div className="flex-1 max-w-xl mx-auto">
-            <div className="relative">
-              <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-              <Input
-                className="pl-10 w-full"
-                placeholder="Search cryptocurrencies..."
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-              />
+          {pathname === "/profile" || pathname === "/" ? (
+            <div className="flex-1 max-w-xl mx-auto">
+              <div className="relative">
+                <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  className="pl-10 w-full"
+                  placeholder="Search cryptocurrencies..."
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                />
+              </div>
             </div>
-          </div>
+          ) : null}
           <div className="flex items-center">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -80,6 +91,15 @@ export default function Navbar() {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
+                    router.push("/token/create");
+                  }}
+                  className="cursor-pointer"
+                >
+                  <Coins className="mr-2 h-4 w-4" />
+                  Create token
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
                     router.push("/profile");
                   }}
                   className="cursor-pointer"
@@ -88,6 +108,7 @@ export default function Navbar() {
                   Profile
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer">
+                  <LogOutIcon className="mr-2 h-4 w-4" />
                   Disconnect
                 </DropdownMenuItem>
               </DropdownMenuContent>

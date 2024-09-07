@@ -1,4 +1,5 @@
 import TokenCard from "@/components/cards/TokenCard";
+import BlurFade from "@/components/magicui/blur-fade";
 import useSearchStore from "@/store/search";
 import { Token } from "@/types/token";
 import { motion } from "framer-motion";
@@ -66,6 +67,9 @@ const mockData: Token[] = [
     favorite: false,
   },
 ];
+
+const BLUR_FADE_DELAY = 0.25;
+
 export default function Home() {
   const { searchText } = useSearchStore();
   const [cryptoList, setCryptoList] = useState<Token[]>(mockData);
@@ -78,17 +82,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col transition-colors duration-300 ease-in-out">
-      <main className="flex-grow container mx-auto p-4">
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, staggerChildren: 0.1 }}
-        >
-          {filteredList.map((crypto, index) => (
+      <main className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredList.map((crypto, index) => (
+          <BlurFade delay={BLUR_FADE_DELAY + index * 0.05} inView>
             <TokenCard key={index} crypto={crypto} />
-          ))}
-        </motion.div>
+          </BlurFade>
+        ))}
       </main>
     </div>
   );

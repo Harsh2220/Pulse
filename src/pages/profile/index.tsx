@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { CheckIcon, CopyIcon, EditIcon } from "lucide-react";
 import { useState } from "react";
 
-export default function Component() {
+export default function Profile() {
   const [user, setUser] = useState({
     username: "CryptoWhale",
     avatarUrl: "/placeholder.svg?height=128&width=128",
@@ -54,17 +54,6 @@ export default function Component() {
     navigator.clipboard.writeText(user.walletAddress);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const toggleFavorite = (symbol: string) => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      tokens: prevUser.tokens.map((token) =>
-        token.symbol === symbol
-          ? { ...token, favorite: !token.favorite }
-          : token
-      ),
-    }));
   };
 
   return (
@@ -133,11 +122,7 @@ export default function Component() {
         transition={{ duration: 0.5, staggerChildren: 0.1 }}
       >
         {user.tokens.map((token, index) => (
-          <TokenCard
-            key={index}
-            crypto={token}
-            toggleFavorite={toggleFavorite}
-          />
+          <TokenCard key={index} crypto={token} />
         ))}
       </motion.div>
     </div>
