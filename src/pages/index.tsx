@@ -70,16 +70,6 @@ export default function Home() {
   const { searchText } = useSearchStore();
   const [cryptoList, setCryptoList] = useState<Token[]>(mockData);
 
-  const toggleFavorite = (symbol: string) => {
-    setCryptoList((prevList) =>
-      prevList.map((crypto) =>
-        crypto.symbol === symbol
-          ? { ...crypto, favorite: !crypto.favorite }
-          : crypto
-      )
-    );
-  };
-
   const filteredList = cryptoList.filter(
     (crypto) =>
       crypto.name.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -96,11 +86,7 @@ export default function Home() {
           transition={{ duration: 0.5, staggerChildren: 0.1 }}
         >
           {filteredList.map((crypto, index) => (
-            <TokenCard
-              key={index}
-              crypto={crypto}
-              toggleFavorite={toggleFavorite}
-            />
+            <TokenCard key={index} crypto={crypto} />
           ))}
         </motion.div>
       </main>
