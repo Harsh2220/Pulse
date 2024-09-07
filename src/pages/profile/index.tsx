@@ -1,12 +1,14 @@
 import TokenCard from "@/components/cards/TokenCard";
+import BlurFade from "@/components/magicui/blur-fade";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Token } from "@/types/token";
-import { motion } from "framer-motion";
 import { CheckIcon, CopyIcon, EditIcon } from "lucide-react";
 import { useState } from "react";
+
+const BLUR_FADE_DELAY = 0.25;
 
 export default function Profile() {
   const [user, setUser] = useState({
@@ -115,16 +117,13 @@ export default function Profile() {
         </CardContent>
       </Card>
 
-      <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, staggerChildren: 0.1 }}
-      >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {user.tokens.map((token, index) => (
-          <TokenCard key={index} crypto={token} />
+          <BlurFade key={index} delay={BLUR_FADE_DELAY + index * 0.05} inView>
+            <TokenCard crypto={token} />
+          </BlurFade>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }

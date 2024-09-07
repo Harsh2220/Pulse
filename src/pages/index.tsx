@@ -84,8 +84,8 @@ export default function Home() {
     <div className="min-h-screen flex flex-col transition-colors duration-300 ease-in-out">
       <main className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredList.map((crypto, index) => (
-          <BlurFade delay={BLUR_FADE_DELAY + index * 0.05} inView>
-            <TokenCard key={index} crypto={crypto} />
+          <BlurFade key={index} delay={BLUR_FADE_DELAY + index * 0.05} inView>
+            <TokenCard crypto={crypto} />
           </BlurFade>
         ))}
       </main>
