@@ -58,7 +58,7 @@ export default function CreateProfile() {
             </form>
           </CardContent>
           <CardFooter>
-            <BlurFade delay={BLUR_FADE_DELAY * 10} inView>
+            <BlurFade delay={BLUR_FADE_DELAY * 10} inView className="w-full">
               <Button className="w-full">Create</Button>
             </BlurFade>
           </CardFooter>
