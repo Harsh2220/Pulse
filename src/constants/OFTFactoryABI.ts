@@ -1,4 +1,4 @@
-export const OFTFactoryABI = [
+export const MyOFTFactoryABI = [
   { inputs: [], name: "Create2EmptyBytecode", type: "error" },
   { inputs: [], name: "Create2FailedDeployment", type: "error" },
   {

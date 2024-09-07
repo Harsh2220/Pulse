@@ -28,6 +28,8 @@
     "recharts": "^2.12.7",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "viem": "^2.21.3",
+    "wagmi": "^2.12.8",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
