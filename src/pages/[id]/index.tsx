@@ -11,8 +11,8 @@ const BLUR_FADE_DELAY = 0.04;
 export default function TokenPage() {
   const path = usePathname();
   const { chainId } = useAccount();
-  console.log(path);
-  const contractAddress = path?.split("/")[1] as `0x${string}`;
+  const contractAddress =
+    path && path != null ? (path?.split("/")[1] as `0x${string}`) : "0x00";
 
   return (
     <section className="container mx-auto p-4">
@@ -29,7 +29,7 @@ export default function TokenPage() {
           inView
           className="col-span-12 md:col-span-6 lg:col-span-4 flex flex-col gap-4"
         >
-          <Actions contractAddress={path.split("/")[1] as `0x${string}`} />
+          <Actions contractAddress={contractAddress} />
           <DetailCard />
         </BlurFade>
       </div>

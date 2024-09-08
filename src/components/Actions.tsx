@@ -154,7 +154,7 @@ export function Actions({
           <CardHeader>
             <CardTitle>Send Tokens</CardTitle>
             <CardDescription>
-              Select the chain, enter the amount, and specify the recipient's
+              Select the chain, enter the amount, and specify the recipient
               address to send tokens.
             </CardDescription>
           </CardHeader>
