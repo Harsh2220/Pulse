@@ -10,8 +10,45 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useMintMyOFT } from "@/hooks/useMyOFT";
+import useToken from "@/hooks/useTokens";
+import { useState } from "react";
+import { useAccount } from "wagmi";
 
-export function Actions() {
+export function Actions({
+  contractAddress,
+}: {
+  contractAddress: `0x${string}`;
+}) {
+  const { token, loading, error } = useToken(contractAddress);
+  const [amount, setAmount] = useState("");
+  const { chainId, address, chain } = useAccount();
+  const { isLoading, mint, hash } = useMintMyOFT(
+    contractAddress,
+    "base-sepolia"
+  );
+  const tokenSymbol = token?.symbol;
+
+  console.log(token, "token", error);
+
+  const handleAmountChange = (e: any) => {
+    setAmount(e.target.value);
+  };
+
+  console.log("address", address);
+
+  const handleBuy = async () => {
+    if (!amount) return;
+
+    try {
+      console.log("chain", chain, chainId);
+
+      const brrr = await mint(amount);
+      console.log("hash", hash, brrr);
+    } catch (err) {
+      console.error("Error buying tokens:", err);
+    }
+  };
   return (
     <Tabs defaultValue="account">
       <TabsList className="grid w-full grid-cols-3" defaultValue="buy">
@@ -22,24 +59,32 @@ export function Actions() {
       <TabsContent value="buy">
         <Card>
           <CardHeader>
-            <CardTitle>Account</CardTitle>
+            <CardTitle>{`Buy $${tokenSymbol}`}</CardTitle>
             <CardDescription>
-              Make changes to your account here. Click save when you&apos;re
-              done.
+              Enter the amount of ETH you want to spend to buy {token?.symbol}{" "}
+              tokens.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="space-y-1">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" defaultValue="Pedro Duarte" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="username">Username</Label>
-              <Input id="username" defaultValue="@peduarte" />
+              <Label htmlFor="amount">Amount (ETH)</Label>
+              <Input
+                id="amount"
+                type="number"
+                placeholder="0.0"
+                value={amount}
+                onChange={handleAmountChange}
+              />
             </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full">Save changes</Button>
+            <Button
+              className="w-full"
+              onClick={handleBuy}
+              disabled={isLoading || !amount}
+            >
+              {isLoading ? "Buying..." : `Buy ${tokenSymbol}`}
+            </Button>
           </CardFooter>
         </Card>
       </TabsContent>

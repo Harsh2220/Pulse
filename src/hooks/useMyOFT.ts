@@ -13,20 +13,22 @@ export const useMyOFT = (oftAddress: `0x${string}`, chainId: ChainId) => {
   return {
     address: oftAddress,
     abi: MYOFTABI,
-    chainId: lzEndpointId,
   };
 };
 
 export const useMintMyOFT = (oftAddress: `0x${string}`, chainId: ChainId) => {
   const contract = useMyOFT(oftAddress, chainId);
-  const { data: hash, writeContract, isError, error } = useWriteContract();
+
+  const { data: hash, writeContractAsync, isError, error } = useWriteContract();
 
   const { isLoading: isWaiting, isSuccess } = useWaitForTransactionReceipt({
     hash,
   });
 
   const mint = async (value: string) => {
-    writeContract({
+    console.log("got this value", value, contract);
+
+    return writeContractAsync({
       ...contract,
       functionName: "mint",
       value: parseEther(value),

@@ -33,6 +33,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import useToken from "@/hooks/useTokens";
 
 const invoices = [
   {
@@ -103,19 +104,24 @@ const invoices = [
   },
 ];
 
-export function History() {
+export function History({
+  contractAddress,
+}: {
+  contractAddress: `0x${string}`;
+}) {
+  const { token, loading, error } = useToken(contractAddress);
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex justify-between md:items-center flex-col sm:flex-row gap-4">
           <div className="flex items-center gap-2">
             <Avatar className="bg-secondary h-10 w-10">
-              <AvatarImage src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" />
-              <AvatarFallback>BTC</AvatarFallback>
+              <AvatarImage src={token?.imageURI} />
+              <AvatarFallback>{token?.symbol}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-semibold">Bitcoin</p>
-              <p className="text-xs text-muted-foreground">BTC</p>
+              <p className="text-sm font-semibold">{token?.name}</p>
+              <p className="text-xs text-muted-foreground">{token?.symbol}</p>
             </div>
           </div>
           <Select>
