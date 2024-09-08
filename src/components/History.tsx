@@ -35,6 +35,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import useToken from "@/hooks/useTokens";
 import { useTokenHistory } from "@/hooks/useTokenHostory";
+import getRelativeTime from "@/utils/getTimeDiff";
+import { formatEther } from "viem";
 
 export function History({
   contractAddress,
@@ -43,6 +45,7 @@ export function History({
 }) {
   const { token, loading, error } = useToken(contractAddress);
   const history = useTokenHistory(contractAddress, 84532);
+
   return (
     <Card>
       <CardHeader>
@@ -86,10 +89,27 @@ export function History({
           <TableBody>
             {history.map((tx) => (
               <TableRow key={tx.name}>
-                <TableCell className="font-medium">{tx.name}</TableCell>
-                <TableCell>{tx.args.timestamp}</TableCell>
+                <TableCell
+                  className={`font-medium ${
+                    tx.name === "Mint"
+                      ? "text-green-500"
+                      : tx.name === "Burn"
+                      ? "text-red-500"
+                      : ""
+                  }`}
+                >
+                  {tx.name === "Mint"
+                    ? "Buy"
+                    : tx.name === "Burn"
+                    ? "Sell"
+                    : tx.name}
+                </TableCell>
 
-                <TableCell className="text-right">{tx.args.amount}</TableCell>
+                <TableCell>{tx.args.timestamp.toLocaleString()}</TableCell>
+
+                <TableCell className="text-right">
+                  {formatEther(tx.args.amount)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
