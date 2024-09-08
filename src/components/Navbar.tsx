@@ -8,14 +8,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { SUPPORTED_CHAINS } from "@/constants/helper";
 import { app } from "@/lib/firebase";
-import { coreKitInstance, getWeb3AuthInstance, verifier } from "@/lib/web3Auth";
+import { getWeb3AuthInstance } from "@/lib/web3Auth";
 import useSearchStore from "@/store/search";
 import useUserStore from "@/store/user";
-import {
-  COREKIT_STATUS,
-  JWTLoginParams,
-  parseToken,
-} from "@web3auth/mpc-core-kit";
 import {
   GoogleAuthProvider,
   UserCredential,
@@ -45,13 +40,9 @@ export default function Navbar() {
   const { isConnected } = useAccount();
   const router = useRouter();
   const pathname = usePathname();
-  const [coreKitStatus, setCoreKitStatus] = useState<COREKIT_STATUS>(
-    COREKIT_STATUS.NOT_INITIALIZED
-  );
+  const { setUser, user, address, setAddress } = useUserStore();
 
   const Web3AuthInstance = getWeb3AuthInstance(SUPPORTED_CHAINS);
-
-  const { setUser, user, address, setAddress } = useUserStore();
 
   async function handleUserData() {
     try {

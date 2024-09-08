@@ -37,7 +37,7 @@ const getViemClient = (chainId: number) => {
 export function useTokenPrice(
   tokenAddress: string,
   amount: string = "1",
-  chainId: number,
+  chainId: string,
 ) {
   const [price, setPrice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -62,12 +62,12 @@ export function useTokenPrice(
         const priceInWei = await client.readContract({
           address: tokenAddress as `0x{string}`,
           abi: MYOFTABI,
-          functionName: "calculateCurvedMintReturn",
-          args: [amountInWei],
+          functionName: "calculateCurvedMintReturn" as any,
+          args: [amountInWei] as any,
           account: "0x9BA21Cf2Cb89d130862a0D5FaB0B99B027a265F1",
         });
 
-        const tokenReturn = parseFloat(formatEther(priceInWei));
+        const tokenReturn = parseFloat(formatEther(priceInWei as any));
 
         const ethPrice = await fetch("/api/hello")
           .then((res) => res.json())

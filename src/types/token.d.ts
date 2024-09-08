@@ -1,4 +1,5 @@
 export type Token = {
+  id: string;
   name: string;
   symbol: string;
   imageURI: string;

@@ -15,38 +15,7 @@ export default function Profile() {
     username: "CryptoWhale",
     avatarUrl: "/placeholder.svg?height=128&width=128",
     walletAddress: "0x1234...5678",
-    tokens: [
-      {
-        name: "WhaleToken",
-        symbol: "WHL",
-        price: 0.5,
-        change: 5.2,
-        volume: 1000000,
-        marketCap: 500000,
-        image: "/placeholder.svg?height=50&width=50",
-        favorite: false,
-      },
-      {
-        name: "OceanCoin",
-        symbol: "OCN",
-        price: 0.1,
-        change: -2.1,
-        volume: 500000,
-        marketCap: 50000,
-        image: "/placeholder.svg?height=50&width=50",
-        favorite: true,
-      },
-      {
-        name: "CoralReef",
-        symbol: "CRL",
-        price: 0.05,
-        change: 10.5,
-        volume: 750000,
-        marketCap: 37500,
-        image: "/placeholder.svg?height=50&width=50",
-        favorite: false,
-      },
-    ] as Token[],
+    tokens: [],
   });
 
   const [copied, setCopied] = useState(false);
@@ -118,11 +87,12 @@ export default function Profile() {
       </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {user.tokens.map((token, index) => (
-          <BlurFade key={index} delay={BLUR_FADE_DELAY + index * 0.05} inView>
-            <TokenCard crypto={token} />
-          </BlurFade>
-        ))}
+        {user.tokens &&
+          user.tokens.map((token, index) => (
+            <BlurFade key={index} delay={BLUR_FADE_DELAY + index * 0.05} inView>
+              <TokenCard crypto={token} />
+            </BlurFade>
+          ))}
       </div>
     </div>
   );

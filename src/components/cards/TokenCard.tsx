@@ -19,7 +19,7 @@ export default function TokenCard({ crypto }: { crypto: Token }) {
             <div>
               <p className="text-md font-medium">{crypto.name}</p>
               <p className="text-xs text-muted-foreground mt-1">
-              {price && price.toString()}
+                {price && price.toString()}
               </p>
             </div>
           </div>
@@ -28,8 +28,7 @@ export default function TokenCard({ crypto }: { crypto: Token }) {
           </p>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex justify-between items-center">
-      </CardContent>
+      <CardContent className="flex justify-between items-center"></CardContent>
     </Card>
   );
 }

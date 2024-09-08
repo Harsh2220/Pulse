@@ -1,6 +1,6 @@
 import { baseSepolia, optimismSepolia, sepolia } from "viem/chains";
 
-export const OFTFactoryAddress = "0xe3dc01C0A47FED16a9F6a3De7EC4dd305B4B003B";
+export const OFTFactoryAddress = "0x59363B0f9896eF3C99b603B00f49B618949663eb";
 
 export const EndpointV2Address = "0x6EDCE65403992e310A62460808c4b910D972f10f";
 
