@@ -36,4 +36,3 @@ if (typeof window !== "undefined") {
     evmProvider = new EthereumSigningProvider({ config: { chainConfig } });
     evmProvider.setupProvider(makeEthereumSigner(coreKitInstance));
 }
-
