@@ -1,5 +1,6 @@
 import TokenCard from "@/components/cards/TokenCard";
 import BlurFade from "@/components/magicui/blur-fade";
+import useAllTokens from "@/hooks/useAllTokens";
 import useSearchStore from "@/store/search";
 import { Token } from "@/types/token";
 import { motion } from "framer-motion";
@@ -71,10 +72,11 @@ const mockData: Token[] = [
 const BLUR_FADE_DELAY = 0.25;
 
 export default function Home() {
+  const { data, error, loading } = useAllTokens();
+
   const { searchText } = useSearchStore();
   const [cryptoList, setCryptoList] = useState<Token[]>(mockData);
-
-  const filteredList = cryptoList.filter(
+  const filteredList = data && data.MyOFTFactory_Deploy.filter(
     (crypto) =>
       crypto.name.toLowerCase().includes(searchText.toLowerCase()) ||
       crypto.symbol.toLowerCase().includes(searchText.toLowerCase())
