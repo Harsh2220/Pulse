@@ -56,27 +56,20 @@ export default function Navbar() {
   async function handleUserData() {
     try {
       if (!Web3AuthInstance.connected) return;
-      console.log(Web3AuthInstance.status, "user");
-
+      const user = await Web3AuthInstance.getUserInfo();
+      console.log(user);
       setUser(user);
     } catch (error) {
       console.log(error);
     }
   }
 
-  async function initCoreKitInstance() {
-    try {
-      await coreKitInstance.init();
-      setCoreKitStatus(coreKitInstance.status);
-      handleUserData();
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  useEffect(() => {
+    handleUserData();
+  }, [Web3AuthInstance.connected]);
 
   useEffect(() => {
     setMounted(true);
-    initCoreKitInstance();
   }, []);
 
   const signInWithGoogle = async (): Promise<UserCredential> => {
@@ -96,25 +89,6 @@ export default function Navbar() {
       if (!Web3AuthInstance) {
         throw new Error("initiated to login");
       }
-      // const loginRes = await signInWithGoogle();
-      // const idToken = await loginRes.user.getIdToken(true);
-      // const parsedToken = parseToken(idToken);
-
-      // const idTokenLoginParams = {
-      //   verifier,
-      //   verifierId: parsedToken.sub,
-      //   idToken,
-      // } as JWTLoginParams;
-
-      // await coreKitInstance.loginWithJWT(idTokenLoginParams);
-      // if (coreKitInstance.status === COREKIT_STATUS.LOGGED_IN) {
-      //   await coreKitInstance.commitChanges();
-      // }
-
-      // if (coreKitInstance.status === COREKIT_STATUS.REQUIRED_SHARE) {
-      // }
-
-      // setCoreKitStatus(coreKitInstance.status);
       const result = await connectAsync({ connector: connectors[2] });
       console.log("rsult", result);
 
@@ -168,7 +142,7 @@ export default function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">
                     <img
-                      src={user?.picture}
+                      src={user?.profileImage}
                       alt="User Avatar"
                       width={32}
                       height={32}
