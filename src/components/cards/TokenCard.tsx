@@ -5,11 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import getRelativeTime from "@/utils/getTimeDiff";
 import { useTokenPrice } from "@/hooks/useTokenPrice";
 
-
 export default function TokenCard({ crypto }: { crypto: Token }) {
-
-  const {loading,error,price}=useTokenPrice(crypto.addr);
-  console.log("Token", price,error)
+  const { loading, error, price } = useTokenPrice(crypto.addr, "1", crypto.id);
   return (
     <Card className="overflow-hidden shadow-none">
       <CardHeader className="pb-2">
@@ -22,7 +19,8 @@ export default function TokenCard({ crypto }: { crypto: Token }) {
             <div>
               <p className="text-md font-medium">{crypto.name}</p>
               <p className="text-xs text-muted-foreground mt-1">
-                0              </p>
+              {price && price.toString()}
+              </p>
             </div>
           </div>
           <p className="text-xl font-semibold">

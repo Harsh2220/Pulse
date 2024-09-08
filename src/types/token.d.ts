@@ -1,10 +1,7 @@
 export type Token = {
-    name: string;
-    symbol: string;
-    price: number;
-    change: number;
-    volume: number;
-    marketCap: number;
-    image: string;
-    favorite: boolean;
+  name: string;
+  symbol: string;
+  imageURI: string;
+  addr: string;
+  db_write_timestamp: string;
 };
