@@ -11,7 +11,6 @@ const BLUR_FADE_DELAY = 0.25;
 export default function Home() {
   const { data, error, loading } = useAllTokens();
   const { searchText } = useSearchStore();
-  const [cryptoList, setCryptoList] = useState<Token[]>(mockData);
   const filteredList =
     data &&
     data.MyOFTFactory_Deploy.filter(
