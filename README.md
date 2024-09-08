@@ -20,9 +20,9 @@ Pulse is more than just a token launchpad; it's your gateway to the future of de
 
 Pulse is built with cross-chain functionality at its core. With LayerZero, transferring tokens between blockchains is a breeze. Say goodbye to interoperability headaches – Pulse ensures a smooth and intuitive user experience.
 
-### 🔐 Social Sign-In with Web3Auth MPC Wallet
+### 🔐 Social Sign-In with Web3Auth Wallet
 
-Pulse makes decentralized technology accessible to everyone by integrating Web3Auth's MPC Wallet. Sign in with your social accounts, leaving behind the hassle of complex seed phrases and clunky interfaces. Pulse brings the simplicity of Web2 into the decentralized world.
+Pulse makes decentralized technology accessible to everyone by integrating Web3Auth. Sign in with your social accounts, leaving behind the hassle of complex seed phrases and clunky interfaces. Pulse brings the simplicity of Web2 into the decentralized world.
 
 ### 📊 Data Indexed by Envio
 
