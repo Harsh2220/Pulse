@@ -2,6 +2,10 @@
 
 Welcome to **Pulse** – the revolutionary cross-chain token launchpad designed to elevate your blockchain projects. Whether you're a developer, entrepreneur, or crypto enthusiast, Pulse offers a seamless and powerful platform to launch, manage, and transfer your tokens across multiple chains with ease.
 
+## Architecture
+
+![architecture](https://res.cloudinary.com/dazemzk7u/image/upload/v1725810223/z9rilkolypp5a6fqduv6.jpg)
+
 ### Key Features
 
 - **Launch Tokens on Multiple Chains**: Effortlessly deploy your tokens across various blockchains, reaching the widest possible audience.
