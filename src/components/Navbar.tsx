@@ -42,12 +42,13 @@ export default function Navbar() {
   const [coreKitStatus, setCoreKitStatus] = useState<COREKIT_STATUS>(
     COREKIT_STATUS.NOT_INITIALIZED
   );
-
-  console.log(coreKitStatus, "status");
+  const [user, setUser] = useState<any>();
 
   async function initCoreKitInstance() {
     await coreKitInstance.init();
     setCoreKitStatus(coreKitInstance.status);
+    const user = coreKitInstance.getUserInfo();
+    setUser(user);
   }
 
   useEffect(() => {
@@ -85,16 +86,23 @@ export default function Navbar() {
 
       await coreKitInstance.loginWithJWT(idTokenLoginParams);
       if (coreKitInstance.status === COREKIT_STATUS.LOGGED_IN) {
-        await coreKitInstance.commitChanges(); // Needed for new accounts
+        await coreKitInstance.commitChanges();
       }
 
       if (coreKitInstance.status === COREKIT_STATUS.REQUIRED_SHARE) {
       }
 
+      // create user in DB
+
       setCoreKitStatus(coreKitInstance.status);
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const logout = async () => {
+    await coreKitInstance.logout();
+    setCoreKitStatus(coreKitInstance.status);
   };
 
   if (!mounted) return null;
@@ -112,7 +120,7 @@ export default function Navbar() {
                 height={32}
                 className="mr-2"
               />
-              <span className="sr-only">CryptoPump</span>
+              <span className="sr-only">Pulse</span>
             </Link>
           </div>
           {pathname === "/profile" || pathname === "/" ? (
@@ -129,56 +137,61 @@ export default function Navbar() {
             </div>
           ) : null}
           <div className="flex items-center">
-            <Button onClick={login}>Connect</Button>
-            {/* <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <img
-                    src="https://api.dicebear.com/9.x/fun-emoji/svg"
-                    alt="User Avatar"
-                    width={32}
-                    height={32}
-                    className="rounded-full"
-                  />
-                  <span className="sr-only">Open user menu</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  className="cursor-pointer"
-                >
-                  {theme === "dark" ? (
-                    <SunIcon className="mr-2 h-4 w-4" />
-                  ) : (
-                    <MoonIcon className="mr-2 h-4 w-4" />
-                  )}
-                  {theme === "dark" ? "Light Mode" : "Dark Mode"}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    router.push("/token/create");
-                  }}
-                  className="cursor-pointer"
-                >
-                  <Coins className="mr-2 h-4 w-4" />
-                  Create token
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    router.push("/profile");
-                  }}
-                  className="cursor-pointer"
-                >
-                  <UserIcon className="mr-2 h-4 w-4" />
-                  Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
-                  <LogOutIcon className="mr-2 h-4 w-4" />
-                  Disconnect
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu> */}
+            {coreKitStatus === COREKIT_STATUS.LOGGED_IN ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <img
+                      src={user?.picture}
+                      alt="User Avatar"
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
+                    <span className="sr-only">Open user menu</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() =>
+                      setTheme(theme === "dark" ? "light" : "dark")
+                    }
+                    className="cursor-pointer"
+                  >
+                    {theme === "dark" ? (
+                      <SunIcon className="mr-2 h-4 w-4" />
+                    ) : (
+                      <MoonIcon className="mr-2 h-4 w-4" />
+                    )}
+                    {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push("/token/create");
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <Coins className="mr-2 h-4 w-4" />
+                    Create token
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push("/profile");
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <UserIcon className="mr-2 h-4 w-4" />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={logout}>
+                    <LogOutIcon className="mr-2 h-4 w-4" />
+                    Disconnect
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button onClick={login}>Connect</Button>
+            )}
           </div>
         </div>
       </div>
