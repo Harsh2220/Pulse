@@ -10,11 +10,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { MultiSelect } from "@/components/ui/multi-select";
+import useCreateTokenStore from "@/store/create-token";
 import { Label } from "@radix-ui/react-label";
 
 const BLUR_FADE_DELAY = 0.04;
 
+const supportedChains = [
+  { value: "eth-sepolia", label: "Eth sepolia" },
+  { value: "base-sepolia", label: "Base sepolia" },
+  { value: "optimism-sepolia", label: "Optimism sepolia" },
+];
+
 export default function CreateProfile() {
+  const { chains, setChains, setName, setSupply, setSymbol } =
+    useCreateTokenStore();
+
   return (
     <section className="w-full min-h-[calc(100vh-65px)] flex justify-center items-center">
       <BlurFade delay={BLUR_FADE_DELAY * 4} inView>
@@ -36,23 +47,64 @@ export default function CreateProfile() {
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                 </BlurFade>
-                <BlurFade delay={BLUR_FADE_DELAY * 7} inView>
-                  <div className="flex flex-col space-y-1.5">
-                    <Label htmlFor="name">Name</Label>
-                    <Input id="name" placeholder="Enter name" />
-                  </div>
+                <BlurFade
+                  delay={BLUR_FADE_DELAY * 7}
+                  inView
+                  className="flex flex-col space-y-1.5"
+                >
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                    id="name"
+                    placeholder="Enter name"
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                  />
                 </BlurFade>
-                <BlurFade delay={BLUR_FADE_DELAY * 8} inView>
+                <BlurFade
+                  delay={BLUR_FADE_DELAY * 9}
+                  inView
+                  className="flex items-center gap-4"
+                >
                   <div className="flex flex-col space-y-1.5">
                     <Label htmlFor="symbol">Symbol</Label>
-                    <Input id="symbol" placeholder="Enter symbol" />
+                    <Input
+                      id="symbol"
+                      placeholder="Enter symbol"
+                      onChange={(e) => {
+                        setSymbol(e.target.value);
+                      }}
+                    />
                   </div>
-                </BlurFade>
-                <BlurFade delay={BLUR_FADE_DELAY * 9} inView>
                   <div className="flex flex-col space-y-1.5">
                     <Label htmlFor="supply">Supply</Label>
-                    <Input id="supply" placeholder="Enter supply" />
+                    <Input
+                      type="number"
+                      id="supply"
+                      min={1}
+                      placeholder="Enter supply"
+                      onChange={(e) => {
+                        setSupply(e.target.value);
+                      }}
+                    />
                   </div>
+                </BlurFade>
+                <BlurFade
+                  delay={BLUR_FADE_DELAY * 9}
+                  inView
+                  className="flex flex-col space-y-1.5"
+                >
+                  <Label htmlFor="chain">Select chain</Label>
+                  <MultiSelect
+                    id="chain"
+                    options={supportedChains}
+                    onValueChange={setChains}
+                    defaultValue={chains}
+                    placeholder="Select frameworks"
+                    variant="inverted"
+                    animation={2}
+                    maxCount={3}
+                  />
                 </BlurFade>
               </div>
             </form>
