@@ -1,39 +1,77 @@
-import { tssLib } from "@toruslabs/tss-dkls-lib";
-import { CHAIN_NAMESPACES, CustomChainConfig } from "@web3auth/base";
-import { EthereumSigningProvider } from "@web3auth/ethereum-mpc-provider";
+// Web3Auth Libraries
+import { Web3AuthConnector } from "@web3auth/web3auth-wagmi-connector";
+import { Web3Auth } from "@web3auth/modal";
+import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import {
-    makeEthereumSigner,
-    WEB3AUTH_NETWORK,
-    Web3AuthMPCCoreKit
-} from "@web3auth/mpc-core-kit";
-import { optimismSepolia, sepolia } from "viem/chains";
+  CHAIN_NAMESPACES,
+  WEB3AUTH_NETWORK,
+  WALLET_ADAPTERS,
+} from "@web3auth/base";
+import { Chain } from "wagmi/chains";
+import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
 
-const web3AuthClientId = process.env.NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID!;
+export default function Web3AuthConnectorInstance(chains: Chain[]) {
+  // Create Web3Auth Instance
+  const name = "My App Name";
+  const chainConfig = {
+    chainNamespace: CHAIN_NAMESPACES.EIP155,
+    chainId: "0x" + chains[0].id.toString(16),
+    rpcTarget: chains[0].rpcUrls.default.http[0], // This is the public RPC we have added, please pass on your own endpoint while creating an app
+    displayName: chains[0].name,
+    tickerName: chains[0].nativeCurrency?.name,
+    ticker: chains[0].nativeCurrency?.symbol,
+    blockExplorerUrl: chains[0].blockExplorers?.default.url[0] as string,
+  };
 
-export const verifier = process.env.NEXT_PUBLIC_VERIFIER;
+  const privateKeyProvider = new EthereumPrivateKeyProvider({
+    config: { chainConfig },
+  });
+  privateKeyProvider;
 
-export let coreKitInstance: Web3AuthMPCCoreKit;
-export let evmProvider: EthereumSigningProvider;
+  const web3AuthInstance = new Web3Auth({
+    clientId: process.env.WEB3_AUTH_CLIENTID!,
+    chainConfig,
+    privateKeyProvider,
+    uiConfig: {
+      appName: name,
+      loginMethodsOrder: ["github", "google"],
+      defaultLanguage: "en",
+      modalZIndex: "2147483647",
+      logoLight: "https://web3auth.io/images/web3authlog.png",
+      logoDark: "https://web3auth.io/images/web3authlogodark.png",
+      uxMode: "redirect",
+      mode: "light",
+    },
+    web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+    enableLogging: true,
+  });
 
-if (typeof window !== "undefined") {
-    const chainConfig: CustomChainConfig = {
-        chainNamespace: CHAIN_NAMESPACES.EIP155,
-        chainId: `0x${optimismSepolia.id.toString(16)}`,
-        rpcTarget: optimismSepolia.rpcUrls.default.http[0],
-    };
+  const walletServicesPlugin = new WalletServicesPlugin({
+    walletInitOptions: {
+      whiteLabel: {
+        showWidgetButton: true,
+      },
+    },
+  });
+  web3AuthInstance.addPlugin(walletServicesPlugin);
 
-    coreKitInstance = new Web3AuthMPCCoreKit({
-        web3AuthClientId,
-        web3AuthNetwork: WEB3AUTH_NETWORK.DEVNET,
-        storage: window.localStorage,
-        manualSync: true,
-        tssLib: {
-            keyType: tssLib.keyType,
-            lib: tssLib
+  const modalConfig = {
+    [WALLET_ADAPTERS.OPENLOGIN]: {
+      label: "openlogin",
+      loginMethods: {
+        facebook: {
+          // it will hide the facebook option from the Web3Auth modal.
+          name: "facebook login",
+          showOnModal: false,
         },
-    });
+      },
+      // setting it to false will hide all social login methods from modal.
+      showOnModal: true,
+    },
+  };
 
-    evmProvider = new EthereumSigningProvider({ config: { chainConfig } });
-    evmProvider.setupProvider(makeEthereumSigner(coreKitInstance));
+  return Web3AuthConnector({
+    web3AuthInstance,
+    modalConfig,
+  });
 }
-
