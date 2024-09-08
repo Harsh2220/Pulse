@@ -6,10 +6,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { app } from "@/lib/firebase";
+import { coreKitInstance, verifier } from "@/lib/web3Auth";
 import useSearchStore from "@/store/search";
 import {
+  COREKIT_STATUS,
+  JWTLoginParams,
+  parseToken,
+} from "@web3auth/mpc-core-kit";
+import {
+  GoogleAuthProvider,
+  UserCredential,
+  getAuth,
+  signInWithPopup,
+} from "firebase/auth";
+import {
   Coins,
-  LogInIcon,
   LogOutIcon,
   MoonIcon,
   SearchIcon,
@@ -27,10 +39,63 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const [coreKitStatus, setCoreKitStatus] = useState<COREKIT_STATUS>(
+    COREKIT_STATUS.NOT_INITIALIZED
+  );
+
+  console.log(coreKitStatus, "status");
+
+  async function initCoreKitInstance() {
+    await coreKitInstance.init();
+    setCoreKitStatus(coreKitInstance.status);
+  }
 
   useEffect(() => {
     setMounted(true);
+    initCoreKitInstance();
   }, []);
+
+  const signInWithGoogle = async (): Promise<UserCredential> => {
+    try {
+      const auth = getAuth(app);
+      const googleProvider = new GoogleAuthProvider();
+      const res = await signInWithPopup(auth, googleProvider);
+      console.log(res);
+      return res;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  };
+
+  const login = async () => {
+    try {
+      if (!coreKitInstance) {
+        throw new Error("initiated to login");
+      }
+      const loginRes = await signInWithGoogle();
+      const idToken = await loginRes.user.getIdToken(true);
+      const parsedToken = parseToken(idToken);
+
+      const idTokenLoginParams = {
+        verifier,
+        verifierId: parsedToken.sub,
+        idToken,
+      } as JWTLoginParams;
+
+      await coreKitInstance.loginWithJWT(idTokenLoginParams);
+      if (coreKitInstance.status === COREKIT_STATUS.LOGGED_IN) {
+        await coreKitInstance.commitChanges(); // Needed for new accounts
+      }
+
+      if (coreKitInstance.status === COREKIT_STATUS.REQUIRED_SHARE) {
+      }
+
+      setCoreKitStatus(coreKitInstance.status);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   if (!mounted) return null;
 
@@ -64,7 +129,8 @@ export default function Navbar() {
             </div>
           ) : null}
           <div className="flex items-center">
-            <DropdownMenu>
+            <Button onClick={login}>Connect</Button>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <img
@@ -112,7 +178,7 @@ export default function Navbar() {
                   Disconnect
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
           </div>
         </div>
       </div>
