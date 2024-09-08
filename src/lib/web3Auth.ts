@@ -1,11 +1,12 @@
 import { tssLib } from "@toruslabs/tss-dkls-lib";
-import { CHAIN_NAMESPACES } from "@web3auth/base";
+import { CHAIN_NAMESPACES, CustomChainConfig } from "@web3auth/base";
 import { EthereumSigningProvider } from "@web3auth/ethereum-mpc-provider";
 import {
     makeEthereumSigner,
     WEB3AUTH_NETWORK,
     Web3AuthMPCCoreKit
 } from "@web3auth/mpc-core-kit";
+import { optimismSepolia, sepolia } from "viem/chains";
 
 const web3AuthClientId = process.env.NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID!;
 
@@ -15,19 +16,15 @@ export let coreKitInstance: Web3AuthMPCCoreKit;
 export let evmProvider: EthereumSigningProvider;
 
 if (typeof window !== "undefined") {
-    const chainConfig = {
+    const chainConfig: CustomChainConfig = {
         chainNamespace: CHAIN_NAMESPACES.EIP155,
-        chainId: "0x1",
-        rpcTarget: "https://rpc.ankr.com/eth",
-        displayName: "Ethereum Mainnet",
-        blockExplorer: "https://etherscan.io/",
-        ticker: "ETH",
-        tickerName: "Ethereum",
+        chainId: `0x${optimismSepolia.id.toString(16)}`,
+        rpcTarget: optimismSepolia.rpcUrls.default.http[0],
     };
 
     coreKitInstance = new Web3AuthMPCCoreKit({
         web3AuthClientId,
-        web3AuthNetwork: WEB3AUTH_NETWORK.MAINNET,
+        web3AuthNetwork: WEB3AUTH_NETWORK.DEVNET,
         storage: window.localStorage,
         manualSync: true,
         tssLib: {

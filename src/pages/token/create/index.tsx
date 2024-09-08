@@ -11,8 +11,17 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { MYOFTABI } from "@/constants/MyOFTABI";
+import { MyOFTFactoryABI } from "@/constants/OFTFactoryABI";
+import {
+  EndpointV2Address,
+  OFTFactoryAddress,
+  getLZEndpointId,
+} from "@/constants/helper";
+import { evmProvider } from "@/lib/web3Auth";
 import useCreateTokenStore from "@/store/create-token";
 import { Label } from "@radix-ui/react-label";
+import { Web3 } from "web3";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -25,6 +34,29 @@ const supportedChains = [
 export default function CreateProfile() {
   const { chains, setChains, setName, setSupply, setSymbol } =
     useCreateTokenStore();
+
+  async function handleToken() {
+    const web3 = new Web3(evmProvider);
+
+    // Get user's Ethereum public address
+    const address = await web3.eth.getAccounts();
+    // name, symbol, lzEndpoint, delegate, reserveRatio, salt, imageURI;
+
+    const contract = new web3.eth.Contract(MyOFTFactoryABI, OFTFactoryAddress);
+    const result = await contract.methods["deploy"](
+      "Zuzu",
+      "ZU",
+      EndpointV2Address,
+      address[0],
+      100000,
+      10,
+      "https://pump.mypinata.cloud/ipfs/QmX3D4erymEq8UWibaG5JzuDDEoSg3JuN1g6ovuu8Rk3cB?img-width=128&img-dpr=2&img-onerror=redirect"
+    ).send({
+      from: address[0],
+    });
+
+    console.log(result, "Result");
+  }
 
   return (
     <section className="w-full min-h-[calc(100vh-65px)] flex justify-center items-center">
@@ -111,7 +143,9 @@ export default function CreateProfile() {
           </CardContent>
           <CardFooter>
             <BlurFade delay={BLUR_FADE_DELAY * 10} inView className="w-full">
-              <Button className="w-full">Create</Button>
+              <Button className="w-full" onClick={handleToken}>
+                Create
+              </Button>
             </BlurFade>
           </CardFooter>
         </Card>
