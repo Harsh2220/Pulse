@@ -88,13 +88,13 @@ export default function CreateProfile() {
           tokenAddress = address;
         }
       }
-      if (tokenAddress) {
-        console.log("inAddress");
-        for (let index = 0; index < chains.length; index++) {
-          const hash = await handlePeers(tokenAddress, parseInt(chains[index]));
-          console.log(hash);
-        }
-      }
+      // if (tokenAddress) {
+      //   console.log("inAddress");
+      //   for (let index = 0; index < chains.length; index++) {
+      //     const hash = await handlePeers(tokenAddress, parseInt(chains[index]));
+      //     console.log(hash);
+      //   }
+      // }
     } catch (error) {
       console.log(error);
     }
