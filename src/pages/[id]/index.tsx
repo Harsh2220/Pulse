@@ -2,7 +2,6 @@ import { Actions } from "@/components/Actions";
 import { History } from "@/components/History";
 import DetailCard from "@/components/cards/DetailCard";
 import BlurFade from "@/components/magicui/blur-fade";
-import { useTokenHistory } from "@/hooks/useTokenHostory";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { useAccount } from "wagmi";

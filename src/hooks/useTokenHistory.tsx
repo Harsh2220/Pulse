@@ -65,8 +65,7 @@ export function useTokenHistory(tokenAddress: string, chainId: number) {
 
         const events = await client.getContractEvents({
           abi: MYOFTABI,
-          address:
-            "0x464FF1f5E1ca6784477ed04fdE095a07f816B392" as `0x${string}`,
+          address: tokenAddress as `0x${string}`,
           fromBlock: BigInt(0),
           toBlock: "latest",
         });

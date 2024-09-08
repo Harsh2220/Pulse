@@ -10,7 +10,7 @@ import { EndpointId } from "@layerzerolabs/lz-definitions";
 import { Options, addressToBytes32 } from "@layerzerolabs/lz-v2-utilities";
 import { MYOFTABI } from "@/constants/MyOFTABI";
 import { readContract } from "viem/actions";
-import { getViemClient } from "./useTokenHostory";
+import { getViemClient } from "./useTokenHistory";
 
 export const useOFT = (oftAddress: `0x${string}`, chainId: ChainId) => {
   const { lzEndpointId } = getChainInfo(chainId);
