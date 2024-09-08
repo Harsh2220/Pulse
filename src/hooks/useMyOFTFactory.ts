@@ -1,39 +1,36 @@
-import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { MyOFTFactoryABI } from "@/constants/OFTFactoryABI";
-import { ChainId, getChainInfo, OFTFactoryAddress } from "@/constants/helper";
+import { ChainId, EndpointV2Address, OFTFactoryAddress, getChainInfo } from "@/constants/helper";
+import getViemClient from "@/lib/viem-client";
+import { useWriteContract } from "wagmi";
 
-export const useDeployMyOFT = (chainId: ChainId) => {
-  const { lzEndpointId } = getChainInfo(chainId);
-  const { data: hash, writeContract, isError, error } = useWriteContract();
-
-  const { isLoading: isWaiting, isSuccess } = useWaitForTransactionReceipt({
-    hash,
-  });
+export const useDeployMyOFT = () => {
+  const { data: hash, writeContractAsync, isError, error } = useWriteContract();
 
   const deployMyOFT = async (
     name: string,
     symbol: string,
-    lzEndpoint: `0x${string}`,
     delegate: `0x${string}`,
-    reserveRatio: bigint,
     salt: bigint,
-    imageURI: string
+    imageURI: string,
+    chainId: number,
   ) => {
-    writeContract({
+    const hash = await writeContractAsync({
       address: OFTFactoryAddress as `0x${string}`,
       abi: MyOFTFactoryABI,
       functionName: "deploy",
-      args: [name, symbol, lzEndpoint, delegate, reserveRatio, salt, imageURI],
-      chainId: lzEndpointId,
-    });
+      args: [name, symbol, EndpointV2Address, delegate, BigInt(1), salt, imageURI],
+    })
+    const client = getViemClient(chainId);
+    const data = await client.waitForTransactionReceipt(
+      { hash: hash }
+    )
+    return data?.logs[0]?.address
   };
 
   return {
     deployMyOFT,
-    isLoading: isWaiting,
-    isSuccess,
     isError,
     error,
-    hash,
+    hash
   };
 };

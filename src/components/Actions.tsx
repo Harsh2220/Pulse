@@ -15,8 +15,6 @@ import useToken from "@/hooks/useTokens";
 import { useState } from "react";
 import { useAccount } from "wagmi";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
-import { useOFTSend } from "@/hooks/useOFTSend";
-import { getLZEndpointId } from "@/constants/helper";
 import { Chain } from "viem";
 import { baseSepolia, sepolia } from "viem/chains";
 
@@ -41,10 +39,6 @@ export function Actions({
     error: burnError,
   } = useBurnMyOFT(contractAddress, "base-sepolia");
 
-  const { hash: oftSendHash, sendTokens } = useOFTSend(
-    contractAddress,
-    "base-sepolia"
-  );
   const tokenSymbol = token?.symbol;
 
   console.log(token, "token", error);
@@ -219,11 +213,11 @@ export function Actions({
             <Button
               className="w-full"
               onClick={() => {
-                sendTokens(
-                  recipientAddress,
-                  getLZEndpointId("eth-sepolia"),
-                  amount
-                );
+                // sendTokens(
+                //   recipientAddress,
+                //   getLZEndpointId("eth-sepolia"),
+                //   amount
+                // );
               }}
             >
               Send
