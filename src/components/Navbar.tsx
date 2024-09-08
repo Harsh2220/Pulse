@@ -94,10 +94,10 @@ export default function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <img
-                src="https://pump.fun/_next/image?url=/logo.png&w=64&q=75"
-                alt="CryptoPump Logo"
-                width={32}
-                height={32}
+                src="/logo.png"
+                alt="Pulse"
+                width={40}
+                height={40}
                 className="mr-2"
               />
               <span className="sr-only">Pulse</span>
