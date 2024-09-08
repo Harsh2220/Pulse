@@ -19,6 +19,7 @@ import {
 } from "firebase/auth";
 import {
   Coins,
+  Copy,
   LogOutIcon,
   MoonIcon,
   SearchIcon,
@@ -40,7 +41,8 @@ export default function Navbar() {
   const { isConnected } = useAccount();
   const router = useRouter();
   const pathname = usePathname();
-  const { setUser, user, address, setAddress } = useUserStore();
+  const { setUser, user } = useUserStore();
+  const { address } = useAccount();
 
   const Web3AuthInstance = getWeb3AuthInstance(SUPPORTED_CHAINS);
 
@@ -63,18 +65,6 @@ export default function Navbar() {
     setMounted(true);
   }, []);
 
-  const signInWithGoogle = async (): Promise<UserCredential> => {
-    try {
-      const auth = getAuth(app);
-      const googleProvider = new GoogleAuthProvider();
-      const res = await signInWithPopup(auth, googleProvider);
-      return res;
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  };
-
   const login = async () => {
     try {
       if (!Web3AuthInstance) {
@@ -92,7 +82,6 @@ export default function Navbar() {
   const logout = async () => {
     disconnect();
     if (!Web3AuthInstance.connected) return;
-
     await Web3AuthInstance.logout();
   };
 
@@ -165,6 +154,18 @@ export default function Navbar() {
                     <Coins className="mr-2 h-4 w-4" />
                     Create token
                   </DropdownMenuItem>
+                  {address && (
+                    <DropdownMenuItem
+                      onClick={() => {
+                        if (!address) return;
+                        navigator.clipboard.writeText(address);
+                      }}
+                      className="cursor-pointer"
+                    >
+                      <Copy className="mr-2 h-4 w-4" />
+                      Copy address
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem
                     onClick={() => {
                       router.push("/profile");

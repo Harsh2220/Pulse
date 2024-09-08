@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Token } from "@/types/token";
 import { CheckIcon, CopyIcon, EditIcon } from "lucide-react";
 import { useState } from "react";
 
