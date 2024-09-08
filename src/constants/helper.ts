@@ -1,3 +1,5 @@
+import { baseSepolia, optimismSepolia, sepolia } from "viem/chains";
+
 export const OFTFactoryAddress = "0xe3dc01C0A47FED16a9F6a3De7EC4dd305B4B003B";
 
 export const EndpointV2Address = "0x6EDCE65403992e310A62460808c4b910D972f10f";
@@ -8,6 +10,8 @@ export interface ChainInfo {
   name: string;
   lzEndpointId: number;
 }
+
+export const SUPPORTED_CHAINS = [baseSepolia, sepolia, optimismSepolia];
 
 export const ChainData: Record<ChainId, ChainInfo> = {
   "base-sepolia": {

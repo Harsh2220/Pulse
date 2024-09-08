@@ -6,8 +6,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { SUPPORTED_CHAINS } from "@/constants/helper";
 import { app } from "@/lib/firebase";
-import { coreKitInstance, verifier } from "@/lib/web3Auth";
+import { coreKitInstance, getWeb3AuthInstance, verifier } from "@/lib/web3Auth";
 import useSearchStore from "@/store/search";
 import useUserStore from "@/store/user";
 import {
@@ -33,21 +34,30 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useAccount, useConnect, useDisconnect } from "wagmi";
 
 export default function Navbar() {
   const { setSearchText, searchText } = useSearchStore();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { connectors, connect, connectAsync } = useConnect();
+  const { disconnect } = useDisconnect();
+  const { isConnected } = useAccount();
   const router = useRouter();
   const pathname = usePathname();
   const [coreKitStatus, setCoreKitStatus] = useState<COREKIT_STATUS>(
     COREKIT_STATUS.NOT_INITIALIZED
   );
+
+  const Web3AuthInstance = getWeb3AuthInstance(SUPPORTED_CHAINS);
+
   const { setUser, user, address, setAddress } = useUserStore();
 
   async function handleUserData() {
     try {
-      const user = coreKitInstance.getUserInfo();
+      if (!Web3AuthInstance.connected) return;
+      console.log(Web3AuthInstance.status, "user");
+
       setUser(user);
     } catch (error) {
       console.log(error);
@@ -83,28 +93,31 @@ export default function Navbar() {
 
   const login = async () => {
     try {
-      if (!coreKitInstance) {
+      if (!Web3AuthInstance) {
         throw new Error("initiated to login");
       }
-      const loginRes = await signInWithGoogle();
-      const idToken = await loginRes.user.getIdToken(true);
-      const parsedToken = parseToken(idToken);
+      // const loginRes = await signInWithGoogle();
+      // const idToken = await loginRes.user.getIdToken(true);
+      // const parsedToken = parseToken(idToken);
 
-      const idTokenLoginParams = {
-        verifier,
-        verifierId: parsedToken.sub,
-        idToken,
-      } as JWTLoginParams;
+      // const idTokenLoginParams = {
+      //   verifier,
+      //   verifierId: parsedToken.sub,
+      //   idToken,
+      // } as JWTLoginParams;
 
-      await coreKitInstance.loginWithJWT(idTokenLoginParams);
-      if (coreKitInstance.status === COREKIT_STATUS.LOGGED_IN) {
-        await coreKitInstance.commitChanges();
-      }
+      // await coreKitInstance.loginWithJWT(idTokenLoginParams);
+      // if (coreKitInstance.status === COREKIT_STATUS.LOGGED_IN) {
+      //   await coreKitInstance.commitChanges();
+      // }
 
-      if (coreKitInstance.status === COREKIT_STATUS.REQUIRED_SHARE) {
-      }
+      // if (coreKitInstance.status === COREKIT_STATUS.REQUIRED_SHARE) {
+      // }
 
-      setCoreKitStatus(coreKitInstance.status);
+      // setCoreKitStatus(coreKitInstance.status);
+      const result = await connectAsync({ connector: connectors[2] });
+      console.log("rsult", result);
+
       handleUserData();
     } catch (err) {
       console.log(err);
@@ -112,8 +125,10 @@ export default function Navbar() {
   };
 
   const logout = async () => {
-    await coreKitInstance.logout();
-    setCoreKitStatus(coreKitInstance.status);
+    disconnect();
+    if (!Web3AuthInstance.connected) return;
+
+    await Web3AuthInstance.logout();
   };
 
   if (!mounted) return null;
@@ -148,7 +163,7 @@ export default function Navbar() {
             </div>
           ) : null}
           <div className="flex items-center">
-            {coreKitStatus === COREKIT_STATUS.LOGGED_IN ? (
+            {isConnected ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">
