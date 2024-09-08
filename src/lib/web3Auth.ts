@@ -30,7 +30,10 @@ if (typeof window !== "undefined") {
         web3AuthNetwork: WEB3AUTH_NETWORK.MAINNET,
         storage: window.localStorage,
         manualSync: true,
-        tssLib: tssLib,
+        tssLib: {
+            keyType: tssLib.keyType,
+            lib: tssLib
+        },
     });
 
     evmProvider = new EthereumSigningProvider({ config: { chainConfig } });
