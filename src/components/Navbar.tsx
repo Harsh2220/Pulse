@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { app } from "@/lib/firebase";
 import { coreKitInstance, verifier } from "@/lib/web3Auth";
 import useSearchStore from "@/store/search";
+import useUserStore from "@/store/user";
 import {
   COREKIT_STATUS,
   JWTLoginParams,
@@ -42,13 +43,25 @@ export default function Navbar() {
   const [coreKitStatus, setCoreKitStatus] = useState<COREKIT_STATUS>(
     COREKIT_STATUS.NOT_INITIALIZED
   );
-  const [user, setUser] = useState<any>();
+  const { setUser, user, address, setAddress } = useUserStore();
+
+  async function handleUserData() {
+    try {
+      const user = coreKitInstance.getUserInfo();
+      setUser(user);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function initCoreKitInstance() {
-    await coreKitInstance.init();
-    setCoreKitStatus(coreKitInstance.status);
-    const user = coreKitInstance.getUserInfo();
-    setUser(user);
+    try {
+      await coreKitInstance.init();
+      setCoreKitStatus(coreKitInstance.status);
+      handleUserData();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -61,7 +74,6 @@ export default function Navbar() {
       const auth = getAuth(app);
       const googleProvider = new GoogleAuthProvider();
       const res = await signInWithPopup(auth, googleProvider);
-      console.log(res);
       return res;
     } catch (err) {
       console.error(err);
@@ -92,9 +104,8 @@ export default function Navbar() {
       if (coreKitInstance.status === COREKIT_STATUS.REQUIRED_SHARE) {
       }
 
-      // create user in DB
-
       setCoreKitStatus(coreKitInstance.status);
+      handleUserData();
     } catch (err) {
       console.log(err);
     }

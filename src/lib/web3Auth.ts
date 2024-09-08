@@ -1,18 +1,11 @@
 import { tssLib } from "@toruslabs/tss-dkls-lib";
+import { CHAIN_NAMESPACES } from "@web3auth/base";
 import { EthereumSigningProvider } from "@web3auth/ethereum-mpc-provider";
 import {
-    COREKIT_STATUS,
-    generateFactorKey,
-    JWTLoginParams,
-    keyToMnemonic,
     makeEthereumSigner,
-    mnemonicToKey,
-    parseToken,
-    TssShareType,
     WEB3AUTH_NETWORK,
-    Web3AuthMPCCoreKit,
+    Web3AuthMPCCoreKit
 } from "@web3auth/mpc-core-kit";
-import { CHAIN_NAMESPACES } from "@web3auth/base";
 
 const web3AuthClientId = process.env.NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID!;
 
