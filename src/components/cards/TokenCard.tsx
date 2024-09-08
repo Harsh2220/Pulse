@@ -4,11 +4,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import getRelativeTime from "@/utils/getTimeDiff";
 import { useTokenPrice } from "@/hooks/useTokenPrice";
+import { useRouter } from "next/router";
 
 export default function TokenCard({ crypto }: { crypto: Token }) {
   const { loading, error, price } = useTokenPrice(crypto.addr, "1", crypto.id);
+  const router = useRouter();
   return (
-    <Card className="overflow-hidden shadow-none">
+    <Card
+      className="overflow-hidden shadow-none"
+      onClick={() => {
+        router.push(crypto.addr);
+      }}
+    >
       <CardHeader className="pb-2">
         <CardTitle className="flex justify-between items-center">
           <div className="flex items-center gap-3">
