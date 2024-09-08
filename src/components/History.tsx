@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import useToken from "@/hooks/useTokens";
-import { useTokenHistory } from "@/hooks/useTokenHostory";
+import { useTokenHistory } from "@/hooks/useTokenHistory";
 import getRelativeTime from "@/utils/getTimeDiff";
 import { formatEther } from "viem";
 
@@ -98,11 +98,7 @@ export function History({
                       : ""
                   }`}
                 >
-                  {tx.name === "Mint"
-                    ? "Buy"
-                    : tx.name === "Burn"
-                    ? "Sell"
-                    : tx.name}
+                  {tx.name === "Mint" ? "Buy" : "Sell"}
                 </TableCell>
 
                 <TableCell>{tx.args.timestamp.toLocaleString()}</TableCell>
